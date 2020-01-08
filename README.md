@@ -98,9 +98,9 @@ For example, if the IP address assigned to your kit is `172.20.10.3`, then updat
 ssl_sock.connect(('172.20.10.3', 50007))
 ```
 
-9. Press the USER_BTN1 (SW2) button on the kit to start listening on the TCP port for any incoming client connections. Confirm that the user LED (LED8) is ON, indicating that the TCP server is listening.
+7. Press the User button (SW2) on the kit to start listening on the TCP port for any incoming client connections. Confirm that the user LED is ON, indicating that the TCP server is listening.
 
-10. Open a command shell and run the python TCP secure client (tcp_secure_client.py ). On successful SSL handshake, TCP server receives "Hello ModusToolbox!" message from the client. The TCP server responds by sending the message "Hello World!" to the client. The TCP client also displays the SSL certifcates details of the server. [Figure 2](#figure-2-tcp-server-output) and [Figure 3](#figure-3-tcp-client-output) shows the TCP server and TCP client outputs respectively.
+8. From the project directory, open a command shell and run the python TCP secure client (tcp_secure_client.py ). On successful SSL handshake, TCP server receives "Hello ModusToolbox!" message from the client. The TCP server responds by sending the message "Hello World!" to the client. The TCP client also displays the SSL certifcates details of the server. [Figure 2](#figure-2-tcp-server-output) and [Figure 3](#figure-3-tcp-client-output) shows the TCP server and TCP client outputs respectively.
 
  ##### Figure 2. TCP Server Output
 
@@ -111,7 +111,7 @@ ssl_sock.connect(('172.20.10.3', 50007))
    ![Figure 3](images/tcp-client-output.png)
 
 
-11. Steps 9 and 10 can be repeated indefinitely. 
+9. Steps 7 and 8 can be repeated indefinitely. 
 
 ## Debugging
 
