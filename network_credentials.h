@@ -7,7 +7,7 @@
 * Related Document: See README.md
 *
 ******************************************************************************
-* Copyright (2019), Cypress Semiconductor Corporation.
+* Copyright (2019-2020), Cypress Semiconductor Corporation.
 ******************************************************************************
 * This software, including source code, documentation and related materials
 * (“Software”), is owned by Cypress Semiconductor Corporation or one of its
@@ -38,71 +38,121 @@
 * indemnify Cypress against all liability.
 *****************************************​**************************************/
 
-
 /*******************************************************************************
 * Include guard
 *******************************************************************************/
 #ifndef NETWORK_CREDENTIALS_H_
 #define NETWORK_CREDENTIALS_H_
 
-/* Wi-Fi Credentials: Modify WIFI_SSID and WIFI_KEY to match your Wi-Fi network
- * Credentials.
+#include "cy_wcm.h"
+
+/*******************************************************************************
+* Macros
+********************************************************************************/
+/* Wi-Fi Credentials: Modify WIFI_SSID, WIFI_PASSWORD, and WIFI_SECURITY_TYPE
+ * to match your Wi-Fi network credentials.
+ * Note: Maximum length of the Wi-Fi SSID and password is set to
+ * CY_WCM_MAX_SSID_LEN and CY_WCM_MAX_PASSPHRASE_LEN as defined in cy_wcm.h file.
  */
-#define WIFI_SSID                         "MY-WIFI-SSID"
-#define WIFI_PASSWORD                     "MY-WIFI-PASSWORD"
+#define WIFI_SSID                         "MY_WIFI_SSID"
+#define WIFI_PASSWORD                     "MY_WIFI_PASSWORD"
 
-/* TCP server certificate. */
-static const char tcp_server_cert[] =
-"-----BEGIN CERTIFICATE-----\n"
-"MIIDhTCCAm0CFHpvc/v8K67YWp7SkKZ+U8UgDBvRMA0GCSqGSIb3DQEBCwUAMH8x\n"
-"CzAJBgNVBAYTAklOMRIwEAYDVQQIDAlLYXJuYXRha2ExGDAWBgNVBAcMD0Jlbmdh\n"
-"bHVydRtbQxtbRDEQMA4GA1UECgwHQ3lwcmVzczEUMBIGA1UECwwLRW5naW5lZXJp\n"
-"bmcxGjAYBgNVBAMMEW15dGNwc2VjdXJlc2VydmVyMB4XDTE5MTIwNTA1MjUwMloX\n"
-"DTIwMTIwNDA1MjUwMlowfzELMAkGA1UEBhMCSU4xEjAQBgNVBAgMCUthcm5hdGFr\n"
-"YTEYMBYGA1UEBwwPQmVuZ2FsdXJ1G1tDG1tEMRAwDgYDVQQKDAdDeXByZXNzMRQw\n"
-"EgYDVQQLDAtFbmdpbmVlcmluZzEaMBgGA1UEAwwRbXl0Y3BzZWN1cmVzZXJ2ZXIw\n"
-"ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDbYpG/jopHvy6j2ln5Dbxg\n"
-"XaQRwu/kHAE9WuxA6svYPWcZ5txqXvP1hPjVPsU74lxc/ckZlgSGspMc/ubc/BFS\n"
-"LoZ6Br5IjzpGx0nxA2g7Rb2EzSKhVoZDqc356S3lBFnf6quKfAlqKSAbv3uvjTbt\n"
-"up0Fnb0rZnMIBrZHQf5m/KMmDmlYHkEPVRXlx3UvNx2v2+22ktdD86R7AOPjjopo\n"
-"M9963Z24pQ6QRA7MrDiAFG7ajKrPwJpbJ5DgzD72+LSIPjejKeFiP5S3LgUvPXv8\n"
-"neQ3UdXCY/8M44yULhKRlhKIk+B5vwBWfm8IxAfJCsktREomUM0jGoJScljVJmul\n"
-"AgMBAAEwDQYJKoZIhvcNAQELBQADggEBAAqyZAIRhNJumQnLM0Kke8lobUpBS0Cq\n"
-"kSaC1zQIQ8w6ruVAXVMohE9DFQbBk7OgX8HxUzDUQIL6h9i2knF0dNseKSFvul4w\n"
-"4I6eYopg/jsTmEkWOgcw9bXb7ibJDjmxSOx9nPXy7ouyqw1/jMlEqAZ8l8hWMYA+\n"
-"fsdkah64dvGTLfhyXpOtF/TUjhLG4A3y6VMTJcZhWbqmIBaY45u9c6nRksM/5ZX9\n"
-"B6PWtpHE5Q4GfQJavgnlLhaOOTuznhssBKIMzTFivAA35RYL5btRsQkKu/2oALP4\n"
-"yg+tikuvKL2cuAHvFmHbAlJcn5wsTMBLb5AU6pacdtS0uPvsD5QHEgM=\n"
-"-----END CERTIFICATE-----\n";
+/* Security type of the Wi-Fi access point. See 'cy_wcm_security_t' structure
+ * in "cy_wcm.h" for more details.
+ */
+#define WIFI_SECURITY_TYPE                CY_WCM_SECURITY_WPA2_AES_PSK
 
-/* Private key of the TCP Server. */
-static const char server_private_key[] =
-"-----BEGIN RSA PRIVATE KEY-----\n"
-"MIIEpQIBAAKCAQEA22KRv46KR78uo9pZ+Q28YF2kEcLv5BwBPVrsQOrL2D1nGebc\n"
-"al7z9YT41T7FO+JcXP3JGZYEhrKTHP7m3PwRUi6Gega+SI86RsdJ8QNoO0W9hM0i\n"
-"oVaGQ6nN+ekt5QRZ3+qrinwJaikgG797r4027bqdBZ29K2ZzCAa2R0H+ZvyjJg5p\n"
-"WB5BD1UV5cd1Lzcdr9vttpLXQ/OkewDj446KaDPfet2duKUOkEQOzKw4gBRu2oyq\n"
-"z8CaWyeQ4Mw+9vi0iD43oynhYj+Uty4FLz17/J3kN1HVwmP/DOOMlC4SkZYSiJPg\n"
-"eb8AVn5vCMQHyQrJLURKJlDNIxqCUnJY1SZrpQIDAQABAoIBAQCMJJ5oWNz60iUw\n"
-"JIb/MwgYIxlxAy8Nb9pW4GM1YQgQvcDD6hb5mGiNeYEfb/a8t3A7Mx+oyY1gomiZ\n"
-"yDegCSHjdrcO8onRfjVDC4GvhXarDnTvhb9OgyBHzww2Tf+0YaAsCxPD5lJ5T4Yk\n"
-"U6DmVvY0zNYLxWUXeV2YTflY8c5a6G86j55IEDEUGQRsAfzhgSZr/WMGxXEBmaC4\n"
-"JvCO8bR03c+4f5rgo+i8Nuv6FT1g+N3uMUlODtVQV3gDOMaLTgOa0UYMicuJ8yKB\n"
-"r37KQvnkZzaEmVEOItcxhrP2/Gn4MnomaaK+6y19eN8mp1qBEPSrUS7iiQQ9Z+ci\n"
-"KlyXiVBBAoGBAPTysRSQHD6USr6HoU+mLyTjqWdvF44naLOtM4rmYa+ffWrc+6sI\n"
-"Z7cwmQiM4ltPvax4iX3qmvDijcjDYmk8MlgHxlcPT6ulg2zb2ArMuJlo/UWQgNtI\n"
-"MOFUdXA9UUN7oARLuJeCwq1MMTvVLZVfp/sNLqpnVTNOi8qc/TXBgrpRAoGBAOVI\n"
-"m9BqBOBv72bpY4Qw2RuXLSGPUpYSwtpv3gMxDWc9WLd8wAhSSRw0irS+ZWS8glQZ\n"
-"s9TjMIN/HUlTERjT7AeV2MANt4/9Dz34JjMSRldLoUlnsXuUDEdE1bZbZcCSR8K8\n"
-"4RlsmZc/dlTBv+99PoukfbwlMzFZQYOHrz+SnzMVAoGBAMqUQMGp4cIbsKlc0Jtn\n"
-"7IuMwZjqtsd5bk1TTFJu8JFnzTjpJDayT9ygk6APrFEqZMrUMZnywkvAgtRsSuKP\n"
-"x28olu9/mTtzOnt4YnekEnPF8dlrhjZUwSBKUooOHDw8bP3AhhzAJzNd1UYPq5Bj\n"
-"OTEXGOYTadJx/okGRyADN5PRAoGAZ2OGX0RvToUq/szfAwzD2Z0hzLBEHUf4dWdc\n"
-"RTQpRxRynMq0DQyNyxomMbppHjOi0SmF3clUZvc6zYWXgAqPtBvt0SxeSZ9i8B6l\n"
-"mwHylgqUf/UyIvdvUfPIKqKsD1nm4fkpx70gxQLo6O81DVj8ixtxVxWvL+F/mT/l\n"
-"1lTXVMECgYEAtI5QCTG57euaGUQyQr4YAmBkiNTblkXehEUPbTfHCuSJOBM4i/Es\n"
-"cTa8zcgojGXLyRWWsZRGej+CelRsJO/IiO1xnujOx/kqLllcJO1EDFXrKdfAZkMs\n"
-"ek4Nx8CUDDxeU8hEnrb2uHGnw/w5PoLIrT9RASa2AzdMr900XlnMg48=\n"
-"-----END RSA PRIVATE KEY-----\n";
+/* Maximum number of connection retries to a Wi-Fi network. */
+#define MAX_WIFI_CONN_RETRIES                     (10u)
+
+/* Wi-Fi re-connection time interval in milliseconds */
+#define WIFI_CONN_RETRY_INTERVAL_MSEC             (1000)
+
+/* TCP server certificate. Copy from the TCP server certificate
+ * generated by OpenSSL (See Readme.md on how to generate a SSL certificate).
+ */
+#define keySERVER_CERTIFICATE_PEM \
+"-----BEGIN CERTIFICATE-----\n"\
+"MIIDhTCCAm0CFHpvc/v8K67YWp7SkKZ+U8UgDBvRMA0GCSqGSIb3DQEBCwUAMH8x\n"\
+"CzAJBgNVBAYTAklOMRIwEAYDVQQIDAlLYXJuYXRha2ExGDAWBgNVBAcMD0Jlbmdh\n"\
+"bHVydRtbQxtbRDEQMA4GA1UECgwHQ3lwcmVzczEUMBIGA1UECwwLRW5naW5lZXJp\n"\
+"bmcxGjAYBgNVBAMMEW15dGNwc2VjdXJlc2VydmVyMB4XDTE5MTIwNTA1MjUwMloX\n"\
+"DTIwMTIwNDA1MjUwMlowfzELMAkGA1UEBhMCSU4xEjAQBgNVBAgMCUthcm5hdGFr\n"\
+"YTEYMBYGA1UEBwwPQmVuZ2FsdXJ1G1tDG1tEMRAwDgYDVQQKDAdDeXByZXNzMRQw\n"\
+"EgYDVQQLDAtFbmdpbmVlcmluZzEaMBgGA1UEAwwRbXl0Y3BzZWN1cmVzZXJ2ZXIw\n"\
+"ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDbYpG/jopHvy6j2ln5Dbxg\n"\
+"XaQRwu/kHAE9WuxA6svYPWcZ5txqXvP1hPjVPsU74lxc/ckZlgSGspMc/ubc/BFS\n"\
+"LoZ6Br5IjzpGx0nxA2g7Rb2EzSKhVoZDqc356S3lBFnf6quKfAlqKSAbv3uvjTbt\n"\
+"up0Fnb0rZnMIBrZHQf5m/KMmDmlYHkEPVRXlx3UvNx2v2+22ktdD86R7AOPjjopo\n"\
+"M9963Z24pQ6QRA7MrDiAFG7ajKrPwJpbJ5DgzD72+LSIPjejKeFiP5S3LgUvPXv8\n"\
+"neQ3UdXCY/8M44yULhKRlhKIk+B5vwBWfm8IxAfJCsktREomUM0jGoJScljVJmul\n"\
+"AgMBAAEwDQYJKoZIhvcNAQELBQADggEBAAqyZAIRhNJumQnLM0Kke8lobUpBS0Cq\n"\
+"kSaC1zQIQ8w6ruVAXVMohE9DFQbBk7OgX8HxUzDUQIL6h9i2knF0dNseKSFvul4w\n"\
+"4I6eYopg/jsTmEkWOgcw9bXb7ibJDjmxSOx9nPXy7ouyqw1/jMlEqAZ8l8hWMYA+\n"\
+"fsdkah64dvGTLfhyXpOtF/TUjhLG4A3y6VMTJcZhWbqmIBaY45u9c6nRksM/5ZX9\n"\
+"B6PWtpHE5Q4GfQJavgnlLhaOOTuznhssBKIMzTFivAA35RYL5btRsQkKu/2oALP4\n"\
+"yg+tikuvKL2cuAHvFmHbAlJcn5wsTMBLb5AU6pacdtS0uPvsD5QHEgM=\n"\
+"-----END CERTIFICATE-----\n"
+
+/* Private key of the TCP Server. Copy from the TCP server key 
+ * generated by OpenSSL (See Readme.md on how to create a private key).
+ */
+#define keySERVER_PRIVATE_KEY_PEM \
+"-----BEGIN RSA PRIVATE KEY-----\n"\
+"MIIEpQIBAAKCAQEA22KRv46KR78uo9pZ+Q28YF2kEcLv5BwBPVrsQOrL2D1nGebc\n"\
+"al7z9YT41T7FO+JcXP3JGZYEhrKTHP7m3PwRUi6Gega+SI86RsdJ8QNoO0W9hM0i\n"\
+"oVaGQ6nN+ekt5QRZ3+qrinwJaikgG797r4027bqdBZ29K2ZzCAa2R0H+ZvyjJg5p\n"\
+"WB5BD1UV5cd1Lzcdr9vttpLXQ/OkewDj446KaDPfet2duKUOkEQOzKw4gBRu2oyq\n"\
+"z8CaWyeQ4Mw+9vi0iD43oynhYj+Uty4FLz17/J3kN1HVwmP/DOOMlC4SkZYSiJPg\n"\
+"eb8AVn5vCMQHyQrJLURKJlDNIxqCUnJY1SZrpQIDAQABAoIBAQCMJJ5oWNz60iUw\n"\
+"JIb/MwgYIxlxAy8Nb9pW4GM1YQgQvcDD6hb5mGiNeYEfb/a8t3A7Mx+oyY1gomiZ\n"\
+"yDegCSHjdrcO8onRfjVDC4GvhXarDnTvhb9OgyBHzww2Tf+0YaAsCxPD5lJ5T4Yk\n"\
+"U6DmVvY0zNYLxWUXeV2YTflY8c5a6G86j55IEDEUGQRsAfzhgSZr/WMGxXEBmaC4\n"\
+"JvCO8bR03c+4f5rgo+i8Nuv6FT1g+N3uMUlODtVQV3gDOMaLTgOa0UYMicuJ8yKB\n"\
+"r37KQvnkZzaEmVEOItcxhrP2/Gn4MnomaaK+6y19eN8mp1qBEPSrUS7iiQQ9Z+ci\n"\
+"KlyXiVBBAoGBAPTysRSQHD6USr6HoU+mLyTjqWdvF44naLOtM4rmYa+ffWrc+6sI\n"\
+"Z7cwmQiM4ltPvax4iX3qmvDijcjDYmk8MlgHxlcPT6ulg2zb2ArMuJlo/UWQgNtI\n"\
+"MOFUdXA9UUN7oARLuJeCwq1MMTvVLZVfp/sNLqpnVTNOi8qc/TXBgrpRAoGBAOVI\n"\
+"m9BqBOBv72bpY4Qw2RuXLSGPUpYSwtpv3gMxDWc9WLd8wAhSSRw0irS+ZWS8glQZ\n"\
+"s9TjMIN/HUlTERjT7AeV2MANt4/9Dz34JjMSRldLoUlnsXuUDEdE1bZbZcCSR8K8\n"\
+"4RlsmZc/dlTBv+99PoukfbwlMzFZQYOHrz+SnzMVAoGBAMqUQMGp4cIbsKlc0Jtn\n"\
+"7IuMwZjqtsd5bk1TTFJu8JFnzTjpJDayT9ygk6APrFEqZMrUMZnywkvAgtRsSuKP\n"\
+"x28olu9/mTtzOnt4YnekEnPF8dlrhjZUwSBKUooOHDw8bP3AhhzAJzNd1UYPq5Bj\n"\
+"OTEXGOYTadJx/okGRyADN5PRAoGAZ2OGX0RvToUq/szfAwzD2Z0hzLBEHUf4dWdc\n"\
+"RTQpRxRynMq0DQyNyxomMbppHjOi0SmF3clUZvc6zYWXgAqPtBvt0SxeSZ9i8B6l\n"\
+"mwHylgqUf/UyIvdvUfPIKqKsD1nm4fkpx70gxQLo6O81DVj8ixtxVxWvL+F/mT/l\n"\
+"1lTXVMECgYEAtI5QCTG57euaGUQyQr4YAmBkiNTblkXehEUPbTfHCuSJOBM4i/Es\n"\
+"cTa8zcgojGXLyRWWsZRGej+CelRsJO/IiO1xnujOx/kqLllcJO1EDFXrKdfAZkMs\n"\
+"ek4Nx8CUDDxeU8hEnrb2uHGnw/w5PoLIrT9RASa2AzdMr900XlnMg48=\n"\
+"-----END RSA PRIVATE KEY-----\n"
+
+/* TCP client certificate. In this example this is the RootCA
+ * certificate so as to verify the TCP client's identity. */
+#define keyCLIENT_ROOTCA_PEM \
+"-----BEGIN CERTIFICATE-----\n"\
+"MIIEHTCCAwWgAwIBAgIUXbJ1O2vQBqwoLQfeDsclV92K3OEwDQYJKoZIhvcNAQEL\n"\
+"BQAwgZ0xCzAJBgNVBAYTAklOMRIwEAYDVQQIDAlLYXJuYXRha2ExEjAQBgNVBAcM\n"\
+"CUJlbmdhbHVydTEPMA0GA1UECgwGTXlfb3JnMRUwEwYDVQQLDAxNeV91bml0X25h\n"\
+"bWUxHTAbBgNVBAMMFG15X3RjcF9zZWN1cmVfY2xpZW50MR8wHQYJKoZIhvcNAQkB\n"\
+"FhBteV9lbWFpbF9hZGRyZXNzMB4XDTIwMDQyMjA0MDQzMVoXDTIxMDQyMjA0MDQz\n"\
+"MVowgZ0xCzAJBgNVBAYTAklOMRIwEAYDVQQIDAlLYXJuYXRha2ExEjAQBgNVBAcM\n"\
+"CUJlbmdhbHVydTEPMA0GA1UECgwGTXlfb3JnMRUwEwYDVQQLDAxNeV91bml0X25h\n"\
+"bWUxHTAbBgNVBAMMFG15X3RjcF9zZWN1cmVfY2xpZW50MR8wHQYJKoZIhvcNAQkB\n"\
+"FhBteV9lbWFpbF9hZGRyZXNzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC\n"\
+"AQEA7IHHX47X3e6k2EQhAVRtoWAu1ZDM3QcoIJgBTogChgyZeBpFfqOPtbprXqta\n"\
+"O0WunvKnjxeDYl+o8M2ypeXNTjSdkBskQMQSXhvXwUdo/inERO5uAkZGRRxJdhyf\n"\
+"aiHqBTxlDSS1EhbTrEnIhO4nNBLa47mfwy+b3gLgL79QUTQOZghDykOv77J5rSHE\n"\
+"TWlGoOoYi7OBHBenft3GjZHNpRj8NxfYb8JhoS95xMvhAdvE43XJGpaI7nbrlxHM\n"\
+"ubkzHEbhpm8QPq+Rs9yxSUju0TUq2NGGsYLA8Fe+XlB4s1rD5eazcgIlIm7xR+OK\n"\
+"d7kwCOTWItO9tmA0vO+AmAraCwIDAQABo1MwUTAdBgNVHQ4EFgQUSpHfzaRQqDDV\n"\
+"ujoKaO6CyIEY9OcwHwYDVR0jBBgwFoAUSpHfzaRQqDDVujoKaO6CyIEY9OcwDwYD\n"\
+"VR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAwGuni6FtWoUDdCYDUyHc\n"\
+"YVIWIZxXt1eHDfaHRngHZ5O3xFUnAh7iiFCieUPr9zZvvdWfbLB/k6YMhmvPviEF\n"\
+"ODBnIbOL2wYv5q1a4U0koQAy/7zCsCAgS71klFupdeLiyHf13s8HkmxOPRjHuout\n"\
+"DElcCJY0f9su9MtsCRiF87j9xqBi9JThw7lFK6AuTa9sOhB23gHafTgxOQ5SXeRk\n"\
+"GULhFsbp9p7IQ7+z+igMFOqUkbWCf914PmqG37mYq/Z039l6rXGcjoV6PH4dySH6\n"\
+"CPH38iG5aeYCepi7+Q7JG/tu7DJdXwGtXuWYKto8d2/JqZVMAB80XM1kFXDUn45X\n"\
+"Nw==\n"\
+"-----END CERTIFICATE-----\n"
 
 #endif /* NETWORK_CREDENTIALS_H_ */

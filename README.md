@@ -1,177 +1,202 @@
-# ModusToolbox Connectivity Example: Secure TCP Server
+# AnyCloud Example: Secure TCP Server
 
-This code example demonstrates implementation of a secure TCP server with PSoC® 6 MCU and CYW43012/CYW4343W connectivity device. In this example, TCP server establishes a secure connection with a TCP client through SSL handshake. Once the SSL handshake completes successfully between the TCP server and the client, the client sends a "Hello ModusToolbox!" message to the server and the server responds by sending a message "Hello World!".
+This code example demonstrates implementation of a secure TCP server with PSoC® 6 MCU and CYW43xxx connectivity devices. In this example, TCP server establishes a secure connection with a TCP client through SSL handshake. Once the SSL handshake completes successfully, the server allows the user to send LED ON/OFF command to the TCP client and the client responds by sending an acknowledgement message to the server.
+
+This example uses the [Wi-Fi Middleware Core](https://github.com/cypresssemiconductorco/wifi-mw-core) library of the AnyCloud SDK. This library enables Wi-Fi based application development by bundling together various other libraries - FreeRTOS, Wi-Fi Host Driver (WHD), lwIP TCP/IP stack, Mbed TLS, and Cypress secure socket. The Cypress secure socket library provides an easy-to-use API by abstracting the network stack (lwIP) and the security stack (Mbed TLS).
 
 ## Requirements
 
-- [ModusToolbox™ IDE](https://www.cypress.com/products/modustoolbox-software-environment) v2.0
+- [ModusToolbox™ software](https://www.cypress.com/products/modustoolbox-software-environment) v2.1
 - Programming Language: C
+- Supported Toolchains: Arm GCC, IAR
 - Associated Parts: All [PSoC® 6 MCU](http://www.cypress.com/PSoC6) parts with SDIO, [CYW43012](https://www.cypress.com/documentation/product-overviews/cypress-cyw43012), [CYW4343W](https://www.cypress.com/documentation/datasheets/cyw4343w-single-chip-80211-bgn-macbasebandradio-bluetooth-41)
 
 ## Supported Kits
 
 - [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (CY8CPROTO-062-4343W) - Default target
-- [PSoC 6 WiFi-BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (CY8CKIT-062-WiFi-BT)
 - [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (CY8CKIT-062S2-43012)
 
 ## Hardware Setup
 
-This example uses the board's default configuration. See the kit user guide to ensure the board is configured correctly.
+This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-**Note**: The PSoC 6 BLE Pioneer Kit and the PSoC 6 WiFi-BT Pioneer Kit ship with KitProg2 installed. ModusToolbox software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/cypresssemiconductorco/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+**Note**: The PSoC 6 BLE Pioneer Kit (CY8CKIT-062-BLE) and the PSoC 6 WiFi-BT Pioneer Kit (CY8CKIT-062-WIFI-BT) ship with KitProg2 installed. ModusToolbox software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/cypresssemiconductorco/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
 ## Software Setup
 
 - Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en). 
-- [Python 2.7.x](https://www.python.org/download/releases/2.7/).
+- Install a Python Interpreter if you don't have one. This code example is tested using [Python 3.7.7](https://www.python.org/downloads/release/python-377/). 
+- [OpenSSL](#prerequisites)
 
 ## Using the Code Example
 
-### In ModusToolbox IDE:
+### In Eclipse IDE for ModusToolbox:
 
-1. Click the **New Application** link in the Quick Panel (or, use **File > New > ModusToolbox IDE Application**).
+1. Click the **New Application** link in the Quick Panel (or, use **File** > **New** > **ModusToolbox Application**).
 
-2. Pick a kit supported by the code example from the list shown in the **IDE Application** dialog.
+2. Pick a kit supported by the code example from the list shown in the **Project Creator - Choose Board Support Package (BSP)** dialog.
 
-   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit later, use the **Library Manager** to choose the BSP for the supported kit. You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, right-click the application name from the Project Workspace window in the IDE, and select **ModusToolbox > Library Manager**. For more details, see the IDE User Guide: *{ModusToolbox install directory}/ide_2.0/docs/mt_ide_user_guide.pdf*.
+   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit later, use the **Library Manager** to choose the BSP for the supported kit. You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, right-click the application name from the Project Workspace window in the IDE, and select **ModusToolbox** > **Library Manager**. You can also access it from the **Quick Panel**.
 
    You can also just start the application creation process again and select a different kit.
 
-   If you want to use the application for a kit not listed here, you may need to update source files. If the kit does not have the required resources, the application may not work.
+   If you want to use the application for a kit not listed here, you may need to update the source files. If the kit does not have the required resources, the application may not work.
 
-3. In the **Starter Application** window, choose the example.
+3. In the **Project Creator - Select Application** dialog, choose the example.
 
-4. Click **Next** and complete the application creation process.
+4. Optionally, update the **Application Name:** and **Location** fields with the application name and local path where the application is created.
 
-See [Importing Code Example into ModusToolbox IDE - KBA225201](https://community.cypress.com/docs/DOC-15968) for details.
+5. Click **Create** to complete the application creation process.
+
+For more details, see the Eclipse IDE for ModusToolbox User Guide: *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*.
 
 ### In Command-line Interface (CLI):
 
 1. Download and unzip this repository onto your local machine, or clone the repository.
 
-2. Open a CLI terminal and navigate to the application folder.
+2. Open a CLI terminal and navigate to the application folder. 
 
-3. Import required libraries by executing the `make getlibs` command.
+On Linux and macOS, you can use any terminal application. On Windows, navigate to the modus-shell directory (*{ModusToolbox install directory}/tools_\<version>/modus-shell*) and run *Cygwin.bat*.
+
+3. Import the required libraries by executing the `make getlibs` command.
+
+### In Third-party IDEs:
+
+1. Follow the instructions from the CLI section to download or clone the repository, and import the libraries using the `make getlibs` command.
+
+2. Export the application to a supported IDE using the `make <ide>` command.
+
+3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
+
+For more details, see the "Exporting to IDEs" section of the ModusToolbox User Guide: *{ModusToolbox install directory}/ide_{version}/docs/mtb_user_guide.pdf*.
 
 ## Operation
 
-1. Connect the board to your PC using the provided USB cable through the USB connector.
+1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
-2. Modify WIFI_SSID and WIFI_PASSWORD macros to match with that of the Wi-Fi network credentials that you want to connect. These macros are defined in the `network_credentials.h` file.
+2. Modify the `WIFI_SSID`, `WIFI_PASSWORD`, and `WIFI_SECURITY_TYPE` macros to match with that of the Wi-Fi network credentials that you want to connect. These macros are defined in the *network_credentials.h* file. Ensure that the Wi-Fi network that you are connecting to is configured as a private network for the proper functioning of this example.
 
 3. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
 4. Program the board.
 
-   ### Using ModusToolbox IDE:
 
-   1. Select the application project in the Project Explorer.
-   2. In the **Quick Panel**, scroll down, and click **mtb_example_connectivity_secure_tcp_server Program (KitProg3)**.
+   - **Using Eclipse IDE for ModusToolbox**:
 
-   ### Using CLI
+      1. Select the application project in the Project Explorer.
 
-   1. From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. You can specify a target and toolchain manually:
-        ```
-        make program TARGET=<BSP> TOOLCHAIN=<toolchain>
-        ```
-        Example:
+      2. In the **Quick Panel**, scroll down, and click **\<Application Name> Program (KitProg3)**.
 
-        ```
-        make program TARGET=CY8CKIT-062S2-43012 TOOLCHAIN=GCC_ARM
-        ```
-        **Note**:  Before building the application, ensure that the *libs* folder contains the BSP file (*TARGET_xxx.lib*) corresponding to the TARGET. Execute the `make getlibs` command to fetch the BSP contents before building the application.
 
-   After programming, the application starts automatically. Confirm that the following text as shown in [Figure 1](#figure-1-uart-terminal-showing-the-wi-fi-connectivity-status) is displayed on the UART terminal. Note that Wi-Fi SSID and the IP address asigned as shown in [Figure 1](#figure-1-uart-terminal-showing-the-wi-fi-connectivity-status) will be different based on the network that you have connected to.
+   - **Using CLI**:
 
-   ##### Figure 1. UART Terminal Showing the Wi-Fi Connectivity Status
+     From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. You can specify a target and toolchain manually:
+    
+   ```
+   make program TARGET=<BSP> TOOLCHAIN=<toolchain>
+   ```
+
+   Example:
+
+
+   ```
+   make program TARGET=CY8CPROTO-062-4343W TOOLCHAIN=GCC_ARM
+   ```
+         
+
+   **Note**:  Before building the application, ensure that the *deps* folder contains the BSP file (*TARGET_xxx.lib*) corresponding to the TARGET. Execute the `make getlibs` command to fetch the BSP contents before building the application.
+
+   After programming, the application starts automatically. Confirm that the text as shown in Figure 1 is displayed on the UART terminal. Note that the Wi-Fi SSID and the IP address assigned will be different based on the network that you have connected to.
+
+   **Figure 1. UART Terminal Showing the Wi-Fi Connectivity Status**
 
    ![Figure 1](images/uart-terminal-output.png)
 
-   Make a note of the IP address assigned to the kit as shown in [Figure 1](#figure-1-uart-terminal-showing-the-wi-fi-connectivity-status) 
-5. Ensure your computer is connected to the same Wi-Fi access point that you have configured in step 2.
 
-6. Open the tcp_secure_client.py script (located at `<project directory>/python-tcp-secure-client` folder) in a text editor and update the IP address with the IP address assigned to your kit (as noted in step 5). 
+5. Make a note of the IP address assigned to the kit as shown in Figure 1. Ensure that your computer is connected to the same Wi-Fi access point that you have configured in Step 2.
 
-For example, if the IP address assigned to your kit is `172.20.10.3`, then update the following line in the tcp_secure_client.py script as shown below:
+6. Open the *tcp_secure_client.py* script (located at *{project directory}/python-tcp-secure-client* folder) in a text editor and update the IP address with the IP address assigned to your kit (as noted in Step 5). 
 
-```
-ssl_sock.connect(('172.20.10.3', 50007))
-```
+   For example, if the IP address assigned to your kit is `192.168.18.10`, update the following line in the *tcp_secure_client.py* script as follows:
 
-7. Press the User button (SW2) on the kit to start listening on the TCP port for any incoming client connections. Confirm that the user LED is ON, indicating that the TCP server is listening.
+   ```
+   DEFAULT_IP   = '192.168.18.10'
+   ```
 
-8. From the project directory, open a command shell and run the python TCP secure client (tcp_secure_client.py ). On successful SSL handshake, TCP server receives "Hello ModusToolbox!" message from the client. The TCP server responds by sending the message "Hello World!" to the client. The TCP client also displays the SSL certifcates details of the server. [Figure 2](#figure-2-tcp-server-output) and [Figure 3](#figure-3-tcp-client-output) shows the TCP server and TCP client outputs respectively.
+7. From the project directory (*{project directory}/python-tcp-secure-client* folder), open a command shell and run the Python TCP secure client (*tcp_secure_client.py*). Note that the script will not run in the *modus-shell*. In the command shell opened in the project directory, type in the following command:
 
- ##### Figure 2. TCP Server Output
+      ```
+      python tcp_secure_client.py
+      ```  
+
+   **Note:** Ensure that the firewall settings of your computer allow access to the Python software so that it can communicate with the TCP server. For more details on enabling Python access, refer to this community [thread](https://community.cypress.com/thread/53662)
+      
+   
+8. Press the user button (CYBSP_USER_BTN) to send LED ON/OFF command to the Python TCP client. Each user button press will issue the LED ON or LED OFF commands alternately. The client in turn sends an acknowledgement message back to the server. Figure 2 and Figure 3 show the TCP server and TCP client outputs respectively.
+
+   **Figure 2. TCP Server Output**
 
    ![Figure 2](images/tcp-server-output.png)
-    
- ##### Figure 3. TCP Client Output
+   
+   **Figure 3. TCP Client Output**
 
    ![Figure 3](images/tcp-client-output.png)
-
-
-9. Steps 7 and 8 can be repeated indefinitely. 
-
+   
+   
 ## Debugging
 
-You can debug the example to step through the code. In the ModusToolbox IDE, use the **mtb_example_connectivity_secure_tcp_server Debug (KitProg3)** configuration in the **Quick Panel**. See [Debugging a PSoC 6 MCU ModusToolbox Project - KBA224621](https://community.cypress.com/docs/DOC-15763) for details.
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3)** configuration in the **Quick Panel**. For more details, see the "Program and Debug" section in the Eclipse IDE for ModusToolbox User Guide: *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*.
 
 ## Design and Implementation
 
 ### Resources and Settings
 
-[Table 1](#table-1-application-resources) lists the ModusToolbox resources used in this example, and how they are used in the design.
+The following ModusToolbox resources are used in this example.
 
-##### Table 1. Application Resources
+**Table 1. Application Resources**
+
 | Resource  |  Alias/Object     |    Purpose     |
 | :------- | :------------    | :------------ |
 | SDIO (HAL) | sdio_obj | SDIO interface for Wi-Fi Connectivity |
 | UART (HAL) |cy_retarget_io_uart_obj| UART HAL object used by Retarget-IO for Debug UART port |
-| LED (BSP) | CYBSP_USER_LED | User LED to show TCP server listening status |
-| BUTTON (BSP) | CYBSP_USER_BTN1 | User button used to start listening on a TCP port |
+| BUTTON (BSP) | CYBSP_USER_BTN | User button used to send LED ON/OFF commands to TCP client |
 
 This example uses the Arm® Cortex®-M4 (CM4) CPU of PSoC 6 MCU to execute an RTOS task: TCP secure server task. At device reset, the default Cortex-M0+ (CM0+) application enables the CM4 CPU and configures the CM0+ CPU to go to sleep.
 
-In this example, TCP server establishes a secure connection with a TCP client through SSL handshake. The server identity is verified using a self signed SSL certificate. See [Creating a Self-Signed Certificate](#creating-a-self-signed-ssl-certificate) for more details. Once the SSL handshake completes succesfully between the TCP server and TCP client, TCP client sends a "Hello ModusToolbox!" message to the server and the server responds by sending a message "Hello World!".
+In this example, the TCP server establishes a secure connection with a TCP client through SSL handshake. During the SSL handshake, the server presents its SSL certificate for verification and verifies the incoming client identity. The server's SSL certificate used in this example is a self-signed SSL certificate. See **Creating a Self-Signed Certificate** for more details. Once the SSL handshake completes successfully, the server allows the user to send LED ON/OFF commands to the TCP client; the client responds by sending an acknowledgement message to the server.
 
-**Note:** CY8CPROTO-062-4343W board shares the same GPIO for the user button (USER BTN1) and the CYW4343W host wake up pin. Since this example uses the GPIO for interfacing with the user button, the SDIO interrupt to wake up the host is disabled by setting CY_WIFI_HOST_WAKE_SW_FORCE to '0' in the `Makefile` through the `DEFINES` variable.
+**Note:** CY8CPROTO-062-4343W board shares the same GPIO for the user button (CYBSP_USER_BTN) and the CYW4343W host wake up pin. Since this example uses the GPIO for interfacing with the user button, the SDIO interrupt to wake up the host is disabled by setting CY_WIFI_HOST_WAKE_SW_FORCE to '0' in the `Makefile` through the `DEFINES` variable.
+
 
 ### Creating a Self-Signed SSL Certificate
-The TCP server demonstrated in this example uses a self-signed SSL cerificate. This means that there is no third-party certificate issuing authority, commoly referred to as CA, involved in the authentication of the server. The clients connecting to the server must have an exact copy of the SSL certificate in order to verify the server's identity. Following steps help you to generate a self-signed SSL certificate.
+The TCP server demonstrated in this example uses a self-signed SSL certificate. This means that there is no third-party certificate issuing authority, commonly referred to as CA, involved in the authentication of the server. Clients connecting to the server must have an exact copy of the SSL certificate to verify the server's identity.
+
+Do the following to generate a self-signed SSL certificate:
 
 #### Prerequisites
-The openssl library is required to generate your own certificate. Run the following command in your local environment to see if you already have openssl installed.
+The OpenSSL library is required to generate your own certificate. Run the following command in your local environment to see if you already have OpenSSL installed.
 
 ```
 which openssl
 ```
-If the which command does not return a path then you will need to install openssl yourself:
+Install OpenSSL if the `which` command does not return a path. 
 
-| Operating system  |  Installion    |
+| Operating System  |  Installation    |
 | :------- | :------------    | 
-| Windows | [Windows opes SSL installer](http://gnuwin32.sourceforge.net/packages/openssl.htm) 
+| Windows | [Windows OpenSSL installer](http://gnuwin32.sourceforge.net/packages/openssl.htm) |
 | Ubuntu Linux |`apt-get install openssl`| 
-| Mac OS X |[Homebrew](https://brew.sh/):`brew install openssl`| 
+| macOS |[Homebrew](https://brew.sh/):`brew install openssl`| 
 
-#### Generate private key and certificate signing request
-A private key and certificate signing request are required to create an SSL certificate. These can be generated with a few simple commands.
+#### Generate SSL Ceritificate and Private Key 
+Run the following commands to generate the SSL certificate and private key. 
 
-When the openssl req command asks for a “challenge password”, just press return, leaving the password empty. This password is used by Certificate Authorities to authenticate the certificate owner when they want to revoke their certificate. Since this is a self-signed certificate, there’s no way to revoke it via CRL (Certificate Revocation List).
+```
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
+```
 
- ##### Figure 4. Generating Private Key and Certificate Signing Request
+Follow the instructions in the command window to provide the details required for creating the SSL certificate and private key.
 
-   ![Figure 4](images/private-key-csr.png)
-
-
-#### Generate SSL Ceritifcate
-The self-signed SSL certificate is generated from the server.key private key and server.csr files.
-
-##### Figure 5. Generating SSL Certificate
-
-   ![Figure 5](images/SSL-cert.png)
-
-The server.crt file is your server's certificate and server.key is your server's private key.
+The *server.crt* file is your server's certificate and *server.key* is your server's private key.
 
 ## Related Resources
 
@@ -182,22 +207,25 @@ The server.crt file is your server's certificate and server.key is your server's
 | [AN210781](https://www.cypress.com/AN210781) – Getting Started with PSoC 6 MCU with Bluetooth Low Energy (BLE) Connectivity on PSoC Creator | Describes PSoC 6 MCU with BLE Connectivity devices and how to build your first application with PSoC Creator |
 | [AN215656](https://www.cypress.com/AN215656) – PSoC 6 MCU: Dual-CPU System Design | Describes the dual-CPU architecture in PSoC 6 MCU, and shows how to build a simple dual-CPU design |
 | **Code Examples**                                            |                                                              |
-| [Using ModusToolbox IDE](https://github.com/cypresssemiconductorco/Code-Examples-for-ModusToolbox-Software) | [Using PSoC Creator](https://www.cypress.com/documentation/code-examples/psoc-6-mcu-code-examples) |
+| [Using ModusToolbox](https://github.com/cypresssemiconductorco/Code-Examples-for-ModusToolbox-Software) | [Using PSoC Creator](https://www.cypress.com/documentation/code-examples/psoc-6-mcu-code-examples) |
 | **Device Documentation**                                     |                                                              |
 | [PSoC 6 MCU Datasheets](https://www.cypress.com/search/all?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A575&f[2]=field_related_products%3A114026) | [PSoC 6 Technical Reference Manuals](https://www.cypress.com/search/all/PSoC%206%20Technical%20Reference%20Manual?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A583) |
-| **Development Kits**                                         | Buy at Cypress.com                                     |
+| **Development Kits**                                         | Buy at www.cypress.com                                       |
 | [CY8CKIT-062-BLE](https://www.cypress.com/CY8CKIT-062-BLE) PSoC 6 BLE Pioneer Kit | [CY8CKIT-062-WiFi-BT](https://www.cypress.com/CY8CKIT-062-WiFi-BT) PSoC 6 WiFi-BT Pioneer Kit |
-| [CY8CPROTO-063-BLE](https://www.cypress.com/CY8CPROTO-063-BLE) PSoC 6 BLE Prototyping Kit | [CY8CPROTO-062-4343W](https://www.cypress.com/cy8cproto-062-4343w) PSoC 6 Wi-Fi BT Prototyping Kit |
-| [CY8CKIT-062S2-43012](https://www.cypress.com/CY8CKIT-062S2-43012) PSoC 62S2 Wi-Fi BT Pioneer Kit | |
-| **Libraries**                                                |                |
-| Cypress Hardware Abstraction Layer Library and docs          | [psoc6hal](https://github.com/cypresssemiconductorco/psoc6hal) on GitHub |
-| RetargetIO - Library for redirecting low level IO commands to allow sending messages via standard printf/scanf functions over a UART connection | [retarget-io](https://github.com/cypresssemiconductorco/retarget-io) on GitHub |
+| [CY8CPROTO-063-BLE](https://www.cypress.com/CY8CPROTO-063-BLE) PSoC 6 BLE Prototyping Kit | [CY8CPROTO-062-4343W](https://www.cypress.com/CY8CPROTO-062-4343W) PSoC 6 Wi-Fi BT Prototyping Kit |
+| [CY8CKIT-062S2-43012](https://www.cypress.com/CY8CKIT-062S2-43012) PSoC 62S2 Wi-Fi BT Pioneer Kit | [CY8CPROTO-062S3-4343W](https://www.cypress.com/CY8CPROTO-062S3-4343W) PSoC 62S3 Wi-Fi BT Prototyping Kit |
+| [CYW9P62S1-43438EVB-01](https://www.cypress.com/CYW9P62S1-43438EVB-01) PSoC 62S1 Wi-Fi BT Pioneer Kit | [CYW9P62S1-43012EVB-01](https://www.cypress.com/CYW9P62S1-43012EVB-01) PSoC 62S1 Wi-Fi BT Pioneer Kit |                                                              |
+| **Libraries**                                                 |                                                              |
+| PSoC 6 Peripheral Driver Library (PDL) and docs                    | [psoc6pdl](https://github.com/cypresssemiconductorco/psoc6pdl) on GitHub |
+| Cypress Hardware Abstraction Layer (HAL) Library and docs          | [psoc6hal](https://github.com/cypresssemiconductorco/psoc6hal) on GitHub |
+| RetargetIO - A utility library to retarget the standard input/output (STDIO) messages to a UART port | [retarget-io](https://github.com/cypresssemiconductorco/retarget-io) on GitHub |
 | **Middleware**                                               |                                                              |
-| Links to all PSoC 6 Middleware                               | [psoc6-middleware](https://github.com/cypresssemiconductorco/psoc6-middleware) on GitHub |
-| Wi-Fi Middleware core                               | [wifi-mw-core](https://github.com/cypresssemiconductorco/wifi-mw-core) on GitHub |
+| Wi-Fi Middleware Core library                                    | [wifi-mw-core](https://github.com/cypresssemiconductorco/wifi-mw-core) on GitHub |
+| CapSense library and docs                                    | [capsense](https://github.com/cypresssemiconductorco/capsense) on GitHub |
+| Links to all PSoC 6 MCU Middleware                           | [psoc6-middleware](https://github.com/cypresssemiconductorco/psoc6-middleware) on GitHub |
 | **Tools**                                                    |                                                              |
-| [ModusToolbox IDE](https://www.cypress.com/modustoolbox)     | The Cypress IDE for PSoC 6 and IoT designers                 |
-| [PSoC Creator](https://www.cypress.com/products/psoc-creator-integrated-design-environment-ide) | The Cypress IDE for PSoC and FM0+ development                |
+| [Eclipse IDE for ModusToolbox](https://www.cypress.com/modustoolbox)     | The multi-platform, Eclipse-based Integrated Development Environment (IDE) that supports application configuration and development for PSoC 6 MCU and IoT designers.             |
+| [PSoC Creator](https://www.cypress.com/products/psoc-creator-integrated-design-environment-ide) | The Cypress IDE for PSoC and FM0+ MCU development.   |
 
 ## Other Resources
 
@@ -207,11 +235,12 @@ For PSoC 6 MCU devices, see [How to Design with PSoC 6 MCU - KBA223067](https://
 
 ## Document History
 
-Document Title: CE229254 - ModusToolbox Connectivity Example: Secure TCP Server
+Document Title: CE229254 - AnyCloud Example: Secure TCP Server
 
 | Version | Description of Change |
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
+| 1.1.0   |  Updated for ModusToolbox 2.1. <br>Code updated to use Cypress Secure Sockets and Wi-Fi Connection Manager libraries. |
 
 ------
 
@@ -221,6 +250,6 @@ All other trademarks or registered trademarks referenced herein are the property
 
 -------------------------------------------------------------------------------
 
-© Cypress Semiconductor Corporation, 2019. This document is the property of Cypress Semiconductor Corporation and its subsidiaries ("Cypress"). This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide. Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights. If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress's patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products. Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.  
+© Cypress Semiconductor Corporation, 2019-2020. This document is the property of Cypress Semiconductor Corporation and its subsidiaries ("Cypress"). This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide. Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights. If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress's patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products. Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.  
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. No computing device can be absolutely secure. Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach"). Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach. In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes. It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product. "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage. Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices. "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness. Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, its directors, officers, employees, agents, affiliates, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress's published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.  
 Cypress, the Cypress logo, Spansion, the Spansion logo, and combinations thereof, WICED, PSoC, CapSense, EZ-USB, F-RAM, and Traveo are trademarks or registered trademarks of Cypress in the United States and other countries. For a more complete list of Cypress trademarks, visit cypress.com. Other names and brands may be claimed as property of their respective owners.
