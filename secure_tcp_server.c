@@ -64,8 +64,6 @@
 /*******************************************************************************
 * Macros
 ********************************************************************************/
-/* RTOS related macros for TCP server task. */
-#define RTOS_TASK_TICKS_TO_WAIT                   (1000)
 
 /* Length of the LED ON/OFF command issued from the TCP server. */
 #define TCP_LED_CMD_LEN                           (1)
@@ -107,13 +105,14 @@ void *tls_identity;
 /* Size of the peer socket address. */
 uint32_t peer_addr_len;
 
-/* Flag variable to track the client connection status. */
-bool client_connected = false;
-bool send_cmd = false;
-
 /* Flags to tack the LED state and command. */
 bool led_state = CYBSP_LED_STATE_OFF;
-uint8_t led_state_cmd = LED_OFF_CMD;
+
+/* Secure TCP server task handle. */
+extern TaskHandle_t server_task_handle;
+
+/* Flag variable to check if TCP client is connected. */
+bool client_connected;
 
 /*******************************************************************************
  * Function Name: tcp_secure_server_task
@@ -135,6 +134,9 @@ void tcp_secure_server_task(void *arg)
 
     /* Variable to store number of bytes sent over TCP socket. */
     uint32_t bytes_sent = 0;
+
+    /* Variable to receive LED ON/OFF command from the user button ISR. */
+    uint32_t led_state_cmd = LED_OFF_CMD;
 
     /* Initialize the user button (CYBSP_USER_BTN) and register interrupt on falling edge. */
     cyhal_gpio_init(CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
@@ -210,10 +212,12 @@ void tcp_secure_server_task(void *arg)
 
     while(true)
     {
+        /* Wait till user button is pressed to send LED ON/OFF command to TCP client. */
+        xTaskNotifyWait(0, 0, &led_state_cmd, portMAX_DELAY);
+
         /* Send LED ON/OFF command to TCP client if there is an active
-         *  TCP client connection.
-         */
-        if(client_connected && send_cmd)
+         *  TCP client connection. */
+        if(client_connected)
         {
             /* Send the command to TCP client. */
             result = cy_socket_send(client_handle, &led_state_cmd, TCP_LED_CMD_LEN,
@@ -239,12 +243,8 @@ void tcp_secure_server_task(void *arg)
                     cy_socket_disconnect(client_handle, 0);
                 }
             }
-            /* Clear the flag to stop sending the command to TCP client. */
-            send_cmd = false;
         }
-
-        vTaskDelay(RTOS_TASK_TICKS_TO_WAIT);
-      }
+    }
  }
 
 /*******************************************************************************
@@ -451,6 +451,7 @@ cy_rslt_t tcp_connection_handler(cy_socket_t socket_handle, void *arg)
         printf("Incoming TCP connection accepted\n");
         printf("TLS Handshake successful and communication secured!\n");
         printf("Press the user button to send LED ON/OFF command to the TCP client\n");
+
         /* Set the client connection flag as true. */
         client_connected = true;
     }
@@ -491,14 +492,19 @@ cy_rslt_t tcp_receive_msg_handler(cy_socket_t socket_handle, void *arg)
 
     if(result == CY_RSLT_SUCCESS)
     {
-        printf("\r\nAcknowledgement from secure TCP Client:\n");
+        /* Terminate the received string with '\0'. */
+        message_buffer[bytes_received] = '\0';
+        printf("\r\nAcknowledgement from TCP Client: %s\n", message_buffer);
 
-        /* Print the message received from secure TCP client. */
-        for(int i = 0; i < bytes_received; i++)
+        /* Set the LED state based on the acknowledgement received from the TCP client. */
+        if(strcmp(message_buffer, "LED ON ACK") == 0)
         {
-            printf("%c", message_buffer[i]);
+            led_state = CYBSP_LED_STATE_ON;
         }
-        printf("\n");
+        else
+        {
+            led_state = CYBSP_LED_STATE_OFF;
+        }
     }
     else
     {
@@ -566,20 +572,27 @@ cy_rslt_t tcp_disconnection_handler(cy_socket_t socket_handle, void *arg)
  *******************************************************************************/
 void isr_button_press( void *callback_arg, cyhal_gpio_event_t event)
 {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    /* Variable to hold the LED ON/OFF command to be sent to the TCP client. */
+    uint32_t led_state_cmd;
+
     /* Set the command to be sent to TCP client. */
     if(led_state == CYBSP_LED_STATE_ON)
     {
-        led_state = CYBSP_LED_STATE_OFF;
         led_state_cmd = LED_OFF_CMD;
     }
     else
     {
-        led_state = CYBSP_LED_STATE_ON;
         led_state_cmd = LED_ON_CMD;
     }
     
     /* Set the flag to send command to TCP client. */
-    send_cmd = true;
+    xTaskNotifyFromISR(server_task_handle, led_state_cmd,
+                      eSetValueWithoutOverwrite, &xHigherPriorityTaskWoken);
+
+    /* Force a context switch if xHigherPriorityTaskWoken is now set to pdTRUE. */
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 /* [] END OF FILE */

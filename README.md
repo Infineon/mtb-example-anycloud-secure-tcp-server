@@ -25,7 +25,7 @@ This example uses the board's default configuration. See the kit user guide to e
 ## Software Setup
 
 - Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en). 
-- Install a Python Interpreter if you don't have one. This code example is tested using [Python 3.7.7](https://www.python.org/downloads/release/python-377/). 
+- Install a Python Interpreter if you don't have one. This code example is tested using [Python 3.7.7](https://www.python.org/downloads/release/python-377/).
 - [OpenSSL](#prerequisites)
 
 ## Using the Code Example
@@ -54,7 +54,7 @@ For more details, see the Eclipse IDE for ModusToolbox User Guide: *{ModusToolbo
 
 1. Download and unzip this repository onto your local machine, or clone the repository.
 
-2. Open a CLI terminal and navigate to the application folder. 
+2. Open a CLI terminal and navigate to the application folder.
 
 On Linux and macOS, you can use any terminal application. On Windows, navigate to the modus-shell directory (*{ModusToolbox install directory}/tools_\<version>/modus-shell*) and run *Cygwin.bat*.
 
@@ -108,7 +108,7 @@ For more details, see the "Exporting to IDEs" section of the ModusToolbox User G
 
    After programming, the application starts automatically. Confirm that the text as shown in Figure 1 is displayed on the UART terminal. Note that the Wi-Fi SSID and the IP address assigned will be different based on the network that you have connected to.
 
-   **Figure 1. UART Terminal Showing the Wi-Fi Connectivity Status**
+   **Figure 1. UART Terminal Showing the Wi-Fi Connection Status**
 
    ![Figure 1](images/uart-terminal-output.png)
 
@@ -123,7 +123,7 @@ For more details, see the "Exporting to IDEs" section of the ModusToolbox User G
    DEFAULT_IP   = '192.168.18.10'
    ```
 
-7. From the project directory (*{project directory}/python-tcp-secure-client* folder), open a command shell and run the Python TCP secure client (*tcp_secure_client.py*). Note that the script will not run in the *modus-shell*. In the command shell opened in the project directory, type in the following command:
+7. From the project directory (*{project directory}/python-tcp-secure-client* folder), open a command shell and run the Python TCP secure client (*tcp_secure_client.py*). In the command shell opened in the project directory, type in the following command:
 
       ```
       python tcp_secure_client.py
@@ -241,12 +241,13 @@ Document Title: CE229254 - AnyCloud Example: Secure TCP Server
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
 | 1.1.0   |  Updated for ModusToolbox 2.1. <br>Code updated to use Cypress Secure Sockets and Wi-Fi Connection Manager libraries. |
+| 1.2.0   | Makefile updated to sync with BSP changes. <br>Code updated to use RTOS Task Notification. |
 
 ------
 
 All other trademarks or registered trademarks referenced herein are the property of their respective owners.
 
-![Banner](images/Banner.png)
+![banner](images/footer_banner.png)
 
 -------------------------------------------------------------------------------
 

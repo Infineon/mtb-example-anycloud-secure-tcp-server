@@ -63,6 +63,9 @@
 /* This enables RTOS aware debugging. */
 volatile int uxTopUsedPriority;
 
+/* Secure TCP server task handle. */
+TaskHandle_t server_task_handle;
+
 /*******************************************************************************
  * Function Name: main
  ********************************************************************************
@@ -82,11 +85,14 @@ int main()
     cy_rslt_t result ;
 
     /* This enables RTOS aware debugging in OpenOCD */
-    uxTopUsedPriority = configMAX_PRIORITIES - 1 ;
+    uxTopUsedPriority = configMAX_PRIORITIES - 1;
 
     /* Initialize the board support package */
     result = cybsp_init() ;
-    CY_ASSERT(result == CY_RSLT_SUCCESS) ;
+    CY_ASSERT(result == CY_RSLT_SUCCESS);
+    
+    /* To avoid compiler warnings. */
+    (void) result;
 
     /* Enable global interrupts */
     __enable_irq();
@@ -103,10 +109,10 @@ int main()
 
     /* Create the tasks */
     xTaskCreate(tcp_secure_server_task, "Network Task", TCP_SECURE_SERVER_TASK_STACK_SIZE, NULL,
-            TCP_SECURE_SERVER_TASK_PRIORITY, NULL) ;
+            TCP_SECURE_SERVER_TASK_PRIORITY, &server_task_handle);
 
     /* Start the FreeRTOS scheduler */
-    vTaskStartScheduler() ;
+    vTaskStartScheduler();
 
     /* Should never get here */
     CY_ASSERT(0) ;
