@@ -61,6 +61,9 @@
 /* TCP server task header file. */
 #include "secure_tcp_server.h"
 
+/* lwIP related header files. */
+#include "cy_lwip.h"
+
 /*******************************************************************************
 * Macros
 ********************************************************************************/
@@ -158,7 +161,7 @@ void tcp_secure_server_task(void *arg)
     result = cy_socket_init();
     if (result != CY_RSLT_SUCCESS)
     {
-        printf("Secure Socket initialization failed!\n");
+        printf("Secure Socket initialization failed! Error code: %lu\n", result);
         CY_ASSERT(0);
     }
     printf("Secure Socket initialized\n");
@@ -168,7 +171,7 @@ void tcp_secure_server_task(void *arg)
                                     server_private_key, pkey_len, &tls_identity);
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Failed cy_tls_create_identity! Error code: %d\n", (int)result);
+        printf("Failed cy_tls_create_identity! Error code: %lu\n", result);
         CY_ASSERT(0);
     }
 
@@ -179,7 +182,7 @@ void tcp_secure_server_task(void *arg)
 
     if( result != CY_RSLT_SUCCESS)
     {
-        printf("cy_tls_load_global_root_ca_certificates failed\n");
+        printf("cy_tls_load_global_root_ca_certificates failed! Error code: %lu\n", result);
         CY_ASSERT(0);
     }
     else
@@ -191,7 +194,7 @@ void tcp_secure_server_task(void *arg)
     result = create_secure_tcp_server_socket();
     if( result != CY_RSLT_SUCCESS)
     {
-        printf("Failed to create socket\n");
+        printf("Failed to create socket! Error code: %lu\n", result);
         CY_ASSERT(0);
     }
 
@@ -200,7 +203,7 @@ void tcp_secure_server_task(void *arg)
     if (result != CY_RSLT_SUCCESS)
     {
         cy_socket_delete(server_handle);
-        printf("cy_socket_listen returned error. Error: %d\n", (int)result);
+        printf("cy_socket_listen returned error. Error: %lu\n", result);
         CY_ASSERT(0);
     }
     else
@@ -236,7 +239,7 @@ void tcp_secure_server_task(void *arg)
             }
             else
             {
-                printf("Failed to send command to client. Error: %d\n", (int)result);
+                printf("Failed to send command to client. Error: %lu\n", result);
                 if(result == CY_RSLT_MODULE_SECURE_SOCKETS_CLOSED)
                 {
                     /* Disconnect the socket. */
@@ -276,7 +279,7 @@ cy_rslt_t connect_to_wifi_ap(void)
 
     if (result != CY_RSLT_SUCCESS)
     {
-        printf("Wi-Fi Connection Manager initialization failed!\n");
+        printf("Wi-Fi Connection Manager initialization failed! Error code: %lu\n", result);
         return result;
     }
     printf("Wi-Fi Connection Manager initialized.\r\n");
@@ -296,19 +299,29 @@ cy_rslt_t connect_to_wifi_ap(void)
         {
             printf("Successfully connected to Wi-Fi network '%s'.\n",
                                 wifi_conn_param.ap_credentials.SSID);
-            printf("IP Address Assigned: %d.%d.%d.%d\n", (uint8_t)ip_address.ip.v4,
-                    (uint8_t)(ip_address.ip.v4 >> 8), (uint8_t)(ip_address.ip.v4 >> 16),
-                    (uint8_t)(ip_address.ip.v4 >> 24));
 
             /* IP address and TCP port number of the TCP server */
-            tcp_server_addr.ip_address.ip.v4 = ip_address.ip.v4;
-            tcp_server_addr.ip_address.version = CY_SOCKET_IP_VER_V4;
+            #if(USE_IPV6_ADDRESS)
+                /* Get the IPv6 address.*/
+                result = cy_wcm_get_ipv6_addr(CY_WCM_INTERFACE_TYPE_STA, CY_WCM_IPV6_LINK_LOCAL, &ip_address);
+                if(result == CY_RSLT_SUCCESS)
+                {
+                    printf("IPv6 address (link-local) assigned: %s\n",
+                            ip6addr_ntoa((const ip6_addr_t*)&ip_address.ip.v6));
+                    memcpy(ip_address.ip.v6, tcp_server_addr.ip_address.ip.v6, sizeof(ip_address.ip.v6));
+                    tcp_server_addr.ip_address.version = CY_SOCKET_IP_VER_V6;
+                }
+            #else
+                printf("IPv4 address assigned: %s\n", ip4addr_ntoa((const ip4_addr_t*)&ip_address.ip.v4));
+                tcp_server_addr.ip_address.ip.v4 = ip_address.ip.v4;
+                tcp_server_addr.ip_address.version = CY_SOCKET_IP_VER_V4;
+            #endif /* USE_IPV6_ADDRESS */
             tcp_server_addr.port = TCP_SERVER_PORT;
             return result;
         }
 
-        printf("Connection to Wi-Fi network failed with error code %d."
-               "Retrying in %d ms...\n", (int)result, WIFI_CONN_RETRY_INTERVAL_MSEC);
+        printf("Connection to Wi-Fi network failed with error code %lu."
+               "Retrying in %d ms...\n", result, WIFI_CONN_RETRY_INTERVAL_MSEC);
         vTaskDelay(pdMS_TO_TICKS(WIFI_CONN_RETRY_INTERVAL_MSEC));
     }
 
@@ -345,11 +358,16 @@ cy_rslt_t create_secure_tcp_server_socket(void)
     cy_socket_tls_auth_mode_t tls_auth_mode = CY_SOCKET_TLS_VERIFY_REQUIRED;
 
     /* Create a Secure TCP socket. */
-    result = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET, CY_SOCKET_TYPE_STREAM,
+    #if(USE_IPV6_ADDRESS)
+    result = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET6, CY_SOCKET_TYPE_STREAM,
                               CY_SOCKET_IPPROTO_TLS, &server_handle);
+    #else
+    result = cy_socket_create(CY_SOCKET_DOMAIN_AF_INET, CY_SOCKET_TYPE_STREAM,
+                                  CY_SOCKET_IPPROTO_TLS, &server_handle);
+    #endif
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Failed to create socket! Error code: %d\n", (int)result);
+        printf("Failed to create socket! Error code: %lu\n", result);
         return result;
     }
 
@@ -359,7 +377,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
                                  sizeof(tcp_recv_timeout));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Set socket option: CY_SOCKET_SO_RCVTIMEO failed\n");
+        printf("Set socket option: CY_SOCKET_SO_RCVTIMEO failed! Error code: %lu\n", result);
         return result;
     }
 
@@ -372,7 +390,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
                                   &tcp_connection_option, sizeof(cy_socket_opt_callback_t));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Set socket option: CY_SOCKET_SO_CONNECT_REQUEST_CALLBACK failed\n");
+        printf("Set socket option: CY_SOCKET_SO_CONNECT_REQUEST_CALLBACK failed! Error code: %lu\n", result);
         return result;
     }
 
@@ -385,7 +403,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
                                   &tcp_receive_option, sizeof(cy_socket_opt_callback_t));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Set socket option: CY_SOCKET_SO_RECEIVE_CALLBACK failed\n");
+        printf("Set socket option: CY_SOCKET_SO_RECEIVE_CALLBACK failed! Error code: %lu\n", result);
         return result;
     }
 
@@ -398,7 +416,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
                                   &tcp_disconnect_option, sizeof(cy_socket_opt_callback_t));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Set socket option: CY_SOCKET_SO_DISCONNECT_CALLBACK failed\n");
+        printf("Set socket option: CY_SOCKET_SO_DISCONNECT_CALLBACK failed! Error code: %lu\n", result);
         return result;
     }
 
@@ -407,7 +425,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
                                   tls_identity, sizeof(tls_identity));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Failed cy_socket_setsockopt! Error code: %d\n", (int)result);
+        printf("Failed cy_socket_setsockopt! Error code: %lu\n", result);
         return result;
     }
 
@@ -419,7 +437,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
     result = cy_socket_bind(server_handle, &tcp_server_addr, sizeof(tcp_server_addr));
     if(result != CY_RSLT_SUCCESS)
     {
-        printf("Failed to bind to socket! Error code: %d\n", (int)result);
+        printf("Failed to bind to socket! Error code: %lu\n", result);
     }
 
     return result;
@@ -457,7 +475,7 @@ cy_rslt_t tcp_connection_handler(cy_socket_t socket_handle, void *arg)
     }
     else
     {
-        printf("Failed to accept incoming client connection. Error: %d\n", (int)result);
+        printf("Failed to accept incoming client connection. Error: %lu\n", result);
         printf("===============================================================\n");
         printf("Listening for incoming TCP client connection on Port: %d\n",
                 tcp_server_addr.port);
@@ -508,8 +526,8 @@ cy_rslt_t tcp_receive_msg_handler(cy_socket_t socket_handle, void *arg)
     }
     else
     {
-        printf("Failed to receive acknowledgement from the secure TCP client. Error: %d\n",
-        (int)result);
+        printf("Failed to receive acknowledgement from the secure TCP client. Error: %lu\n",
+        result);
         if(result == CY_RSLT_MODULE_SECURE_SOCKETS_CLOSED)
         {
             /* Disconnect the socket. */

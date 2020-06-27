@@ -36,6 +36,7 @@
 #******************************************************************************/
 
 #!/usr/bin/env python
+
 import socket
 import optparse
 import time
@@ -43,21 +44,34 @@ import sys
 import ssl
 
 # IP details for the TCP server
-DEFAULT_IP   = '192.168.18.10'   # IP address of the TCP server
-DEFAULT_PORT = 50007             # Port of the TCP server
-
-DEFAULT_KEEP_ALIVE = 0           # Keep the connection alive (=1), or close the connection (=0)
-
-
-def tcp_client( server_ip, server_port, test_keepalive ):
+DEFAULT_PORT = 50007                         # Port of the TCP server
+arguments = len(sys.argv) - 1
+    
+if ((arguments == 2) and sys.argv[1] == "ipv4"):
     print("================================================================================")
-    print("TCP Secure Client")
+    print("TCP Secure Client (IPv4 addressing mode)")
     print("================================================================================")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ssl_sock = ssl.wrap_socket(s, ca_certs='root_ca.crt', cert_reqs=ssl.CERT_REQUIRED, certfile="client.crt", keyfile="client.key")
-    ssl_sock.connect((DEFAULT_IP, DEFAULT_PORT))
-    print("Connected to TCP Server (IP Address: ", DEFAULT_IP, "Port: ", DEFAULT_PORT, " )")
-    
+elif((arguments == 2) and sys.argv[1] == "ipv6"):
+    print("================================================================================")
+    print("TCP Secure Client (IPv6 addressing mode)")
+    print("================================================================================")
+    s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+else:
+    print("\nInvalid inputs. From the command line, enter IP address type (ipv6 or ipv4) followed by server IP address")
+    print("For example:")
+    print("If you are using IPv4 addressing mode, enter the command as:")
+    print("python tcp_secure_client ipv4 <IPv4 Address>")
+    print("If you are using IPv6 addressing mode, enter the command as:")
+    print("python tcp_secure_client ipv6 <IPv6 Address>")
+    sys.exit(1)
+   
+ssl_sock = ssl.wrap_socket(s, ca_certs='root_ca.crt', cert_reqs=ssl.CERT_REQUIRED, certfile="client.crt", keyfile="client.key")
+DEFAULT_IP   = sys.argv[2]
+ssl_sock.connect((DEFAULT_IP, DEFAULT_PORT))
+print("Connected to TCP Server (IP Address: ", DEFAULT_IP, "Port: ", DEFAULT_PORT, " )")
+
+try:
     while 1:
         print("================================================================================")        
         data = ssl_sock.read();
@@ -71,16 +85,12 @@ def tcp_client( server_ip, server_port, test_keepalive ):
             message = 'LED ON ACK'
             ssl_sock.write(message.encode('utf-8'))
         print("Acknowledgement sent to secure TCP server")
-                
+        
+except KeyboardInterrupt:
     ssl_sock.close()
-
-
-if __name__ == '__main__':
-    parser = optparse.OptionParser()
-    parser.add_option("--hostip", dest="hostip", default=DEFAULT_IP, help="Hostip to listen on.")
-    parser.add_option("-p", "--port", dest="port", type="int", default=DEFAULT_PORT, help="Port to listen on [default: %default].")
-    parser.add_option("--test_keepalive", dest="test_keepalive", type="int", default=DEFAULT_KEEP_ALIVE, help="Test keepalive capability")
-    (options, args) = parser.parse_args()
-    #start tcp client
-    tcp_client(options.hostip, options.port, options.test_keepalive)
-
+    s.close()
+    s = None
+    print("\nConnection Closed")
+    sys.exit(1)
+        
+# [] END OF FILE
