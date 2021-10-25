@@ -90,6 +90,7 @@ cy_rslt_t tcp_connection_handler(cy_socket_t socket_handle, void *arg);
 cy_rslt_t tcp_receive_msg_handler(cy_socket_t socket_handle, void *arg);
 cy_rslt_t tcp_disconnection_handler(cy_socket_t socket_handle, void *arg);
 void isr_button_press( void *callback_arg, cyhal_gpio_event_t event);
+void print_heap_usage(char *msg);
 
 #if(USE_AP_INTERFACE)
     static cy_rslt_t softap_start(void);
@@ -281,6 +282,8 @@ void tcp_secure_server_task(void *arg)
                 }
             }
         }
+
+        print_heap_usage("After sending LED ON/OFF command to client");
     }
  }
 
@@ -442,7 +445,7 @@ cy_rslt_t create_secure_tcp_server_socket(void)
 
     /* Set the TCP socket to use the TLS identity. */
     result = cy_socket_setsockopt(server_handle, CY_SOCKET_SOL_TLS, CY_SOCKET_SO_TLS_IDENTITY,
-                                  tls_identity, sizeof(tls_identity));
+                                  tls_identity, sizeof((uint32_t)tls_identity));
     if(result != CY_RSLT_SUCCESS)
     {
         printf("Failed cy_socket_setsockopt! Error code: %"PRIu32"\n", result);
@@ -556,6 +559,8 @@ cy_rslt_t tcp_receive_msg_handler(cy_socket_t socket_handle, void *arg)
             cy_socket_delete(socket_handle);
         }
     }
+
+    print_heap_usage("After receiving ACK from client");
 
     printf("===============================================================\n");
     printf("Press the user button to send LED ON/OFF command to the TCP client\n");

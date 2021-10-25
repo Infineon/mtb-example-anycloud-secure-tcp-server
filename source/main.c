@@ -61,8 +61,6 @@
 /*******************************************************************************
 * Global Variables
 ********************************************************************************/
-/* This enables RTOS aware debugging. */
-volatile int uxTopUsedPriority;
 
 /* Secure TCP server task handle. */
 TaskHandle_t server_task_handle;
@@ -83,13 +81,10 @@ TaskHandle_t server_task_handle;
  *******************************************************************************/
 int main()
 {
-    cy_rslt_t result ;
-
-    /* This enables RTOS aware debugging in OpenOCD */
-    uxTopUsedPriority = configMAX_PRIORITIES - 1;
+    cy_rslt_t result;
 
     /* Initialize the board support package */
-    result = cybsp_init() ;
+    result = cybsp_init();
     CY_ASSERT(result == CY_RSLT_SUCCESS);
     
     /* To avoid compiler warnings. */
@@ -105,7 +100,7 @@ int main()
     /* \x1b[2J\x1b[;H - ANSI ESC sequence to clear screen */
     printf("\x1b[2J\x1b[;H");
     printf("===============================================================\n");
-    printf("CE229254 - AnyCloud Example: Secure TCP Server\n");
+    printf("CE229254 - Secure TCP Server\n");
     printf("===============================================================\n\n");
 
     /* Create the tasks */
