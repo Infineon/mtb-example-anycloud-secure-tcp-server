@@ -8,20 +8,20 @@ This example uses the Wi-Fi middleware core library of the SDK. This library ena
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-anycloud-secure-tcp-server)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMjkyNTQiLCJTcGVjIE51bWJlciI6IjAwMi0yOTI1NCIsIkRvYyBUaXRsZSI6IlNlY3VyZSBUQ1Agc2VydmVyIiwicmlkIjoic2RhayIsIkRvYyB2ZXJzaW9uIjoiMi4xLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMjkyNTQiLCJTcGVjIE51bWJlciI6IjAwMi0yOTI1NCIsIkRvYyBUaXRsZSI6IlNlY3VyZSBUQ1Agc2VydmVyIiwicmlkIjoic2RhayIsIkRvYyB2ZXJzaW9uIjoiMy4wLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
 
 ## Requirements
 
-- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.2 or later (tested with v2.3)
-- Board support package (BSP) minimum required version: 2.0.0
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.4 or later
+- Board support package (BSP) minimum required version: 3.0.0
 - Programming language: C
-- Associated parts: All [PSoC&trade; 6 MCU](https://www.cypress.com/PSoC6) parts, [AIROC™ CYW20735 Bluetooth® & Bluetooth® LE system on chip](https://www.cypress.com/products/cyw20735), [AIROC™ CYW20819 Bluetooth® & Bluetooth® LE system on chip](https://www.cypress.com/products/cyw20819), [AIROC™ CYW43012 Wi-Fi & Bluetooth® combo chip](https://www.cypress.com/products/cyw43012), [AIROC™ CYW4332W Wi-Fi & Bluetooth® combo chip](https://www.cypress.com/products/cyw4343w)
+- Associated parts: All [PSoC&trade; 6 MCU](https://www.cypress.com/PSoC6) parts
 
 
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
-- GNU Arm® embedded compiler v9.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
+- GNU Arm® embedded compiler v10.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
 - Arm&reg; compiler v6.13 (`ARM`)
 - IAR C/C++ compiler v8.42.2 (`IAR`)
 
@@ -34,7 +34,8 @@ This example uses the Wi-Fi middleware core library of the SDK. This library ena
 - [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.cypress.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.cypress.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.cypress.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
-- [PSoC&trade; 62S2 evaluation kit](https://www.cypress.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2-LAI-4373M2`)
+- [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; prototyping kit](https://www.cypress.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
+- [PSoC&trade; 62S2 evaluation kit](https://www.cypress.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`)
 
 ## Hardware setup
 
@@ -146,7 +147,7 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
    1. Set the `USE_AP_INTERFACE` macro to '0'. This is the default mode.
 
-   2. Modify the `WIFI_SSID`, `WIFI_PASSWORD`, and `WIFI_SECURITY_TYPE` macros to match with that of the Wi-Fi network credentials that you want to connect. These macros are defined in the *network_credentials.h* file. Ensure that the Wi-Fi network that you are connecting to is configured as a private network for the proper functioning of this example.
+   2. Modify the `WIFI_SSID`, `WIFI_PASSWORD`, and `WIFI_SECURITY_TYPE` macros to match with that of the Wi-Fi network credentials that you want to connect to. These macros are defined in the *network_credentials.h* file. Ensure that the Wi-Fi network that you are connecting to is configured as a private network for the proper functioning of this example.
 
    **Kit in AP mode:**
 
@@ -211,7 +212,7 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
    - **In AP mode:** Connect the computer to the kit's AP.
 
-   Make a note of the IP address assigned to the kit. Note that the type of IP address (IPv4 or IPv6) assigned will be based on the IP addressing mode configured in step 3.
+   Make a note of the IP address assigned to the kit. Note that the type of IP address (IPv4 or IPv6) assigned will be based on the IP addressing mode configured in Step 3.
 
 7. From the project directory (*{project directory}/python-tcp-secure-client* folder), open a command shell and run the Python TCP secure client (*tcp_secure_client.py*). In the command shell opened in the project directory, type in the following command based on the IP addressing mode configuration:
 
@@ -236,7 +237,7 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
    Figure 4 and Figure 5 show the TCP server output in IPv4 addressing mode, when the CE is configured in STA and AP mode respectively. Figure 6 shows the TCP client output in IPv4 addressing mode for both AP and STA mode. When the CE is configured in STA mode, Figure 7 and Figure 8 show the TCP server and TCP client outputs respectively in IPv6 addressing mode.
 
-   When the CE is configured in AP and IPv6 mode, the only change from the Figure 4 will be the IPv6 address being displayed instead of IPv4.
+   When the CE is configured in AP and IPv6 mode, the only change from the Figure 4 is the IPv6 address being displayed instead of IPv4.
 
    **Figure 4. TCP server output - STA mode (IPv4 addressing mode)**
 
@@ -346,14 +347,15 @@ For PSoC&trade; 6 MCU devices, see [How to design with PSoC&trade; 6 MCU - KBA22
 
 Document title: *CE229254* - *Secure TCP server*
 
-  Version | Description of change
-  ------- | ---------------------
-  1.0.0   | New code example
-  1.1.0   | Updated for ModusToolbox&trade; software 2.1 <br>Code updated to use  secure sockets and Wi-Fi connection manager libraries
-  1.2.0   | Makefile updated to sync with BSP changes. <br>Code updated to use RTOS task notification
-  1.3.0   | Updated to add link-local IPv6 support
-  2.0.0   | Major update to support ModusToolbox&trade; software v2.2, added support for new kits<br />Added soft AP Wi-Fi interface mode<br /> This version is not backward compatible with ModusToolbox&trade; software v2.1.<br /> Updated to support FreeRTOS v10.3.1
-  2.1.0   | Updated to FreeRTOS v10.4.3 <br> Added support for new kits |
+ Version | Description of change
+ ------- | ---------------------
+ 1.0.0   | New code example
+ 1.1.0   | Updated for ModusToolbox&trade; software 2.1 <br>Code updated to use  secure sockets and Wi-Fi connection manager libraries
+ 1.2.0   | Makefile updated to sync with BSP changes. <br>Code updated to use RTOS task notification
+ 1.3.0   | Updated to add link-local IPv6 support
+ 2.0.0   | Major update to support ModusToolbox&trade; software v2.2, added support for new kits<br />Added soft AP Wi-Fi interface mode<br /> This version is not backward compatible with ModusToolbox&trade; software v2.1.<br /> Updated to support FreeRTOS v10.3.1
+ 2.1.0   | Updated to FreeRTOS v10.4.3 <br> Added support for new kits |
+ 3.0.0   | Updated to support ModusToolbox™ software v2.4 <br> Added support for new kits <br> Updated the BSPs to v3.X
 
 <br>
 
