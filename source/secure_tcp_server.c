@@ -5,7 +5,7 @@
 * TCP server operation.
 *
 *******************************************************************************
-* Copyright 2019-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2019-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -62,8 +62,8 @@
 /* TCP server task header file. */
 #include "secure_tcp_server.h"
 
-/* lwIP related header files. */
-#include "cy_lwip.h"
+/* IP address related header files (part of the lwIP TCP/IP stack). */
+#include "ip_addr.h"
 
 /* to use the portable formatting macros */
 #include <inttypes.h>
@@ -331,7 +331,7 @@ cy_rslt_t connect_to_wifi_ap(void)
             /* IP address and TCP port number of the TCP server */
             #if(USE_IPV6_ADDRESS)
                 /* Get the IPv6 address.*/
-                result = cy_wcm_get_ipv6_addr(CY_WCM_INTERFACE_TYPE_STA, CY_WCM_IPV6_LINK_LOCAL, &ip_address,1);
+                result = cy_wcm_get_ipv6_addr(CY_WCM_INTERFACE_TYPE_STA, CY_WCM_IPV6_LINK_LOCAL, &ip_address);
                 if(result == CY_RSLT_SUCCESS)
                 {
                     printf("IPv6 address (link-local) assigned: %s\n",
@@ -691,7 +691,7 @@ static cy_rslt_t softap_start(void)
                 SOFTAP_SSID, SOFTAP_PASSWORD);
     #if(USE_IPV6_ADDRESS)
         /* Get the IPv6 address.*/
-        result = cy_wcm_get_ipv6_addr(CY_WCM_INTERFACE_TYPE_AP, CY_WCM_IPV6_LINK_LOCAL, &ip_address,1);
+        result = cy_wcm_get_ipv6_addr(CY_WCM_INTERFACE_TYPE_AP, CY_WCM_IPV6_LINK_LOCAL, &ip_address);
         if(result == CY_RSLT_SUCCESS)
         {
             printf("SofAP : IPv6 address (link-local) assigned: %s\n",
