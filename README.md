@@ -8,7 +8,7 @@ This example uses the Wi-Fi Core FreeRTOS lwIP mbedtls library of the SDK. This 
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-wifi-secure-tcp-server)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMjkyNTQiLCJTcGVjIE51bWJlciI6IjAwMi0yOTI1NCIsIkRvYyBUaXRsZSI6IlNlY3VyZSBUQ1Agc2VydmVyIiwicmlkIjoic2RhayIsIkRvYyB2ZXJzaW9uIjoiNC4wLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMjkyNTQiLCJTcGVjIE51bWJlciI6IjAwMi0yOTI1NCIsIkRvYyBUaXRsZSI6IlNlY3VyZSBUQ1Agc2VydmVyIiwicmlkIjoic2RhayIsIkRvYyB2ZXJzaW9uIjoiNC4xLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
 
 
 ## Requirements
@@ -16,7 +16,7 @@ This example uses the Wi-Fi Core FreeRTOS lwIP mbedtls library of the SDK. This 
 - [ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) v3.0 or later (tested with v3.0)
 - Board support package (BSP) minimum required version: 4.0.0
 - Programming language: C
-- Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) parts, [AIROC™ CYW20735 Bluetooth® & Bluetooth® LE system on chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/cyw20735), [AIROC™ CYW20819 Bluetooth® & Bluetooth® LE system on chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/cyw20819), [AIROC™ CYW43012 Wi-Fi & Bluetooth® combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/cyw43012), [AIROC™ CYW4332W Wi-Fi & Bluetooth® combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/cyw4343w/)
+- Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) parts, [AIROC&trade; CYW20819 Bluetooth&reg; & Bluetooth&reg; LE system on chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/airoc-bluetooth-le-bluetooth/cyw20819), [AIROC&trade; CYW43012 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43012), [AIROC&trade; CYW4343W Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw4343w), [AIROC&trade; CYW4373 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw4373), [AIROC&trade; CYW43439 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439)
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
@@ -32,6 +32,7 @@ This example uses the Wi-Fi Core FreeRTOS lwIP mbedtls library of the SDK. This 
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
 - [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; prototyping kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
+- [PSoC&trade; 64 "Secure Boot" Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-064B0S2-4343W) (`CY8CKIT-064B0S2-4343W`)
 - [PSoC&trade; 62S2 evaluation kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`)
 
 ## Hardware setup
@@ -93,13 +94,13 @@ Argument | Description | Required/optional
 
 <br />
 
-The following example clones the "[mtb-example-wifi-secure-tcp-server](https://github.com/Infineon/mtb-example-wifi-secure-tcp-server)" application with the desired name "SecureTcpServer" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
+The following example clones the "[Secure TCP Server](https://github.com/Infineon/mtb-example-wifi-secure-tcp-server)" application with the desired name "SecureTcpServer" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
    project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-wifi-secure-tcp-server --user-app-name SecureTcpServer --target-dir "C:/mtb_projects"
    ```
 
-**Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
+**Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
 
 To work with a different supported kit later, use the [Library Manager](https://www.infineon.com/ModusToolboxLibraryManager) to choose the BSP for the supported kit. You can invoke the Library Manager GUI tool from the terminal using `make library-manager` command or use the Library Manager CLI tool "library-manager-cli" to change the BSP.
 
@@ -155,9 +156,13 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
 ## Operation
 
+If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
+
+**Note:**  Use `policy_single_CM0_CM4_smif_swap.json` policy instead of using the default one "policy_single_CM0_CM4_swap.json" to provision CY8CKIT-064B0S2-4343W device.
+
 1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
-2. The kit can be configured to run either as Wi-Fi STA interface mode or in AP interface mode. The interface mode is configured using  the `USE_AP_INTERFACE` macro defined in the *network_credentials.h* file. Based on the desired interface mode, do the following:
+2. The kit can be configured to run either in the Wi-Fi STA interface mode or in AP interface mode. The interface mode is configured using  the `USE_AP_INTERFACE` macro defined in the *network_credentials.h* file. Based on the desired interface mode, do the following:
 
    **Kit in STA mode (default interface):**
 
@@ -202,33 +207,33 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
    </details>
 
 
-   After programming, the application starts automatically. Confirm that the text as shown in either one of the following figures is displayed on the UART terminal. Note that the Wi-Fi SSID and the IP address assigned will be different based on the network that you have connected to; in AP mode, the AP credentials will be different based on your configuration in Step 2.
+   After programming, the application starts automatically. Confirm that the text as shown in either one of the following figures is displayed on the UART terminal. Note that the Wi-Fi SSID and the IP address assigned will be different based on the network that you have connected to; in AP mode, the AP credentials will be different based on your configuration in **Step 2**.
 
    **Figure 1. UART terminal showing the Wi-Fi connection status (IPv4 address and STA mode)**
 
    ![](images/wifi-conn-status-ipv4-sta-mode.png)
 
-   <br>
+   <br />
 
    **Figure 2. UART terminal showing the Wi-Fi connection status (IPv6 address and STA mode)**
 
    ![](images/wifi-conn-status-ipv6-sta-mode.png)
 
-   <br>
+   <br />
 
    **Figure 3. UART terminal showing the Wi-Fi connection status (IPv4 address and AP mode)**
 
    ![](images/wifi-conn-status-ipv4-ap-mode.png)
 
-   Similarly, when the CE is configured for IPv6 and AP mode, the IPv4 address displayed in Figure 3 will be replaced by the IPv6 address.
+   Similarly, when the CE is configured for IPv6 and AP mode, the IPv4 address displayed in **Figure 3** will be replaced by the IPv6 address.
 
-6. Connect your PC to the Wi-Fi AP that you have configured in Step 2:
+6. Connect your PC to the Wi-Fi AP that you have configured in **Step 2**:
 
    - **In STA mode:** Connect the computer to the same AP to which the kit is connected.
 
    - **In AP mode:** Connect the computer to the kit's AP.
 
-   Make a note of the IP address assigned to the kit. Note that the type of IP address (IPv4 or IPv6) assigned will be based on the IP addressing mode configured in Step 3.
+   Make a note of the IP address assigned to the kit. Note that the type of IP address (IPv4 or IPv6) assigned will be based on the IP addressing mode configured in **Step 3**.
 
 7. From the project directory (*{project directory}/python-tcp-secure-client* folder), open a command shell and run the Python TCP secure client (*tcp_secure_client.py*). In the command shell opened in the project directory, type in the following command based on the IP addressing mode configuration:
 
@@ -244,46 +249,46 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
    python tcp_secure_client.py ipv6 <IPv6 address of the kit>
    ```
 
-   **Note:** Ensure that the firewall settings of your computer allow access to the Python software so that it can communicate with the TCP server. For more details on enabling Python access, see this [community thread](https://community.cypress.com/thread/53662).
+   **Note:** Ensure that the firewall settings of your computer allow access to the Python software so that it can communicate with the TCP server. For more details on enabling Python access, see this [community thread](https://community.infineon.com/thread/53662).
 
 
 8. Press the user button (CYBSP_USER_BTN) to send LED ON/OFF command to the Python TCP client.
 
    Each user button press will issue the LED ON or LED OFF commands alternately. The client in turn sends an acknowledgement message back to the server.
 
-   Figure 4 and Figure 5 show the TCP server output in IPv4 addressing mode, when the CE is configured in STA and AP mode respectively. Figure 6 shows the TCP client output in IPv4 addressing mode for both AP and STA mode. When the CE is configured in STA mode, Figure 7 and Figure 8 show the TCP server and TCP client outputs respectively in IPv6 addressing mode.
+   **Figure 4** and **Figure 5** show the TCP server output in IPv4 addressing mode, when the CE is configured in STA and AP mode respectively. **Figure 6** shows the TCP client output in IPv4 addressing mode for both AP and STA mode. When the CE is configured in STA mode, **Figure 7** and **Figure 8** show the TCP server and TCP client outputs respectively in IPv6 addressing mode.
 
-   When the CE is configured in AP and IPv6 mode, the only change from the Figure 4 is the IPv6 address being displayed instead of IPv4.
+   When the CE is configured in AP and IPv6 mode, the only change from the **Figure 4** is the IPv6 address being displayed instead of IPv4.
 
    **Figure 4. TCP server output - STA mode (IPv4 addressing mode)**
 
    ![](images/tcp-server-ipv4-output-sta-mode.png)
 
-   <br>
+   <br />
 
    **Figure 5. TCP server output - AP mode (IPv4 addressing mode)**
 
    ![](images/tcp-server-ipv4-output-ap-mode.png)
 
-   <br>
+   <br />
 
    **Figure 6. TCP client output (IPv4 addressing mode)**
 
    ![](images/tcp-client-ipv4-output.png)
 
-   <br>
+   <br />
 
    **Figure 7. TCP server output (IPv6 addressing mode)**
 
    ![](images/tcp-server-ipv6-output-sta-mode.png)
 
-   <br>
+   <br />
 
    **Figure 8. TCP client output (IPv6 addressing mode)**
 
    ![](images/tcp-client-ipv6-output.png)
 
-      **Note:** Instead of using the Python TCP client (*tcp_secure_client.py*), alternatively you can use the example [mtb-example-secure-tcp-client](https://github.com/Infineon/mtb-example-secure-tcp-client) to run as TCP client on the second kit. See the code example documentation to learn how to use the example.
+      **Note:** Instead of using the Python TCP client (*tcp_secure_client.py*), alternatively you can use the example [mtb-example-wifi-secure-tcp-client](https://github.com/Infineon/mtb-example-wifi-secure-tcp-client) to run as TCP client on the second kit. See the code example documentation to learn how to use the example.
 
 ## Debugging
 
@@ -304,7 +309,7 @@ In this example, the TCP server establishes a secure connection with a TCP clien
 
 Once the SSL handshake completes successfully, the server allows the user to send LED ON/OFF commands to the TCP client; the client responds by sending an acknowledgement message to the server.
 
-**Note:** The CY8CPROTO-062-4343W board shares the same GPIO for the user button (CYBSP_USER_BTN) and the CYW4343W host wake pin. Because this example uses the GPIO for interfacing with the user button, the SDIO interrupt to wake up the host is disabled by setting `CY_WIFI_HOST_WAKE_SW_FORCE` to **0** in the Makefile through the `DEFINES` variable.
+**Note:** The CY8CPROTO-062-4343W board shares the same GPIO for the user button (CYBSP_USER_BTN) and the CYW4343W host wake pin. Because this example uses the GPIO for interfacing with the user button, the SDIO interrupt to wake up the host is disabled by setting `CY_WIFI_HOST_WAKE_SW_FORCE` to '0' in the Makefile through the `DEFINES` variable.
 
 **Table 1. Application resources**
 
@@ -314,9 +319,9 @@ Once the SSL handshake completes successfully, the server allows the user to sen
  UART (HAL) |cy_retarget_io_uart_obj| UART HAL object used by retarget-io for debug UART port
  BUTTON (BSP) | CYBSP_USER_BTN | User button used to send LED ON/OFF commands to the TCP client
 
-<br>
+<br />
 
-<br>
+<br />
 
 ### Creating a self-signed SSL certificate
 
@@ -326,7 +331,7 @@ Do the following to generate a self-signed SSL certificate:
 
 #### **Generate SSL certificate and private key**
 
-1. Run the following command with a CLI (on Windows, use the command line **modus-shell** program provided in the ModusToolbox&trade; software installation instead of a standard Windows command-line application) to generate the SSL certificate and private key.
+1. Run the following command with a CLI (on Windows, use the command line "modus-shell" program provided in the ModusToolbox&trade; software installation instead of a standard Windows command-line application) to generate the SSL certificate and private key.
 
    ```
    openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
@@ -341,13 +346,13 @@ Do the following to generate a self-signed SSL certificate:
 
 Resources  | Links
 -----------|----------------------------------
-Application notes  | [AN228571](https://www.infineon.com/dgdl/Infineon-AN228571_Getting_started_with_PSoC_6_MCU_on_ModusToolbox_software-ApplicationNotes-v06_00-EN.pdf?fileId=8ac78c8c7cdc391c017d0d36de1f66d1) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; software <br>  [AN215656](https://www.infineon.com/dgdl/Infineon-AN215656_PSoC_6_MCU_Dual-CPU_System_Design-ApplicationNotes-v09_00-EN.pdf?fileId=8ac78c8c7cdc391c017d0d3180c4655f) – PSoC&trade; 6 MCU: Dual-CPU system design <br> [AN79953](https://www.infineon.com/dgdl/Infineon-AN79953_Getting_Started_with_PSoC_4-ApplicationNotes-v21_00-EN.pdf?fileId=8ac78c8c7cdc391c017d07271fd64bc1) – Getting started with PSoC&trade; 4 <br>  [AN85951](https://www.infineon.com/dgdl/Infineon-AN85951_PSoC_4_and_PSoC_6_MCU_CapSense_Design_Guide-ApplicationNotes-v27_00-EN.pdf?fileId=8ac78c8c7cdc391c017d0723535d4661) – PSoC&trade; 4 and PSoC&trade; 6 MCU CAPSENSE&trade; design guide
-Code examples  | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub <br> [Using PSoC&trade; Creator](https://www.infineon.com/cms/en/design-support/software/code-examples/psoc-3-4-5-code-examples-for-psoc-creator)
-Device documentation | [PSoC&trade; 6 MCU datasheets](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Data%20Sheet) <br> [PSoC&trade; 6 technical reference manuals](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Additional%20Technical%20Information)
-Development kits | Select your kits from the [Evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board) page.
-Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSoC&trade; 6 peripheral driver library (PDL)  <br> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware abstraction layer (HAL) library <br> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
-Middleware on GitHub  | [capsense](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
-Tools  | [Eclipse IDE for ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices.
+Application notes  | [AN228571](https://www.infineon.com/AN228571) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; software <br />  [AN215656](https://www.infineon.com/AN215656) – PSoC&trade; 6 MCU: Dual-CPU system design <br /> [AN79953](https://www.infineon.com/AN79953) – Getting started with PSoC&trade; 4 <br />  [AN85951](https://www.infineon.com/AN85951) – PSoC&trade; 4 and PSoC&trade; 6 MCU CAPSENSE&trade; design guide
+Code examples  | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub <br /> [Using PSoC&trade; Creator](https://www.infineon.com/cms/en/design-support/software/code-examples/psoc-3-4-5-code-examples-for-psoc-creator)
+Device documentation | [PSoC&trade; 6 MCU datasheets](https://documentation.infineon.com/html/psoc6/bnm1651211483724.html) <br /> [PSoC&trade; 6 technical reference manuals](https://documentation.infineon.com/html/psoc6/zrs1651212645947.html)<br /> 
+Development kits | Select your kits from the [evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board)
+Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSoC&trade; 6 peripheral driver library (PDL)  <br /> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware abstraction layer (HAL) library <br /> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port <br />  [mtb-pdl-cat2](https://github.com/Infineon/mtb-pdl-cat2) – PSoC&trade; 4 peripheral driver library (PDL) <br />  [mtb-hal-cat2](https://github.com/Infineon/mtb-hal-cat2) – Hardware abstraction layer (HAL) library
+Middleware on GitHub  | [capsense](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br /> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
+Tools  | [Eclipse IDE for ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices. <br /> [PSoC&trade; Creator](https://www.infineon.com/cms/en/design-support/tools/sdk/psoc-software/psoc-creator/) – IDE for PSoC&trade; and FM0+ MCU development
 
 <br />
 
@@ -365,13 +370,14 @@ Document title: *CE229254* - *Secure TCP server*
  Version | Description of change
  ------- | ---------------------
  1.0.0   | New code example
- 1.1.0   | Updated for ModusToolbox&trade; software 2.1 <br>Code updated to use  secure sockets and Wi-Fi connection manager libraries
- 1.2.0   | Makefile updated to sync with BSP changes. <br>Code updated to use RTOS task notification
+ 1.1.0   | Updated for ModusToolbox&trade; software 2.1 <br />Code updated to use  secure sockets and Wi-Fi connection manager libraries
+ 1.2.0   | Makefile updated to sync with BSP changes. <br />Code updated to use RTOS task notification
  1.3.0   | Updated to add link-local IPv6 support
  2.0.0   | Major update to support ModusToolbox&trade; software v2.2, added support for new kits<br />Added soft AP Wi-Fi interface mode<br /> This version is not backward compatible with ModusToolbox&trade; software v2.1.<br /> Updated to support FreeRTOS v10.3.1
- 2.1.0   | Updated to FreeRTOS v10.4.3 <br> Added support for new kits |
- 3.0.0   | Updated to support ModusToolbox™ software v2.4 <br> Added support for new kits <br> Updated the BSPs to v3.X |
+ 2.1.0   | Updated to FreeRTOS v10.4.3 <br /> Added support for new kits |
+ 3.0.0   | Updated to support ModusToolbox™ software v2.4 <br /> Added support for new kits <br /> Updated the BSPs to v3.X |
  4.0.0   | Major update to support ModusToolbox™ v3.0 and BSPs v4.X. This version is not backward compatible with previous versions of ModusToolbox&trade;
+ 4.1.0   | Added support for CY8CKIT-064B0S2-4343W.
 
 <br />
 
@@ -381,4 +387,4 @@ Document title: *CE229254* - *Secure TCP server*
 <br />
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  No computing device can be absolutely secure.  Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach").  Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach.  In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes.  It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product.  "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage.  Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices.  "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness.  Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, including its affiliates, and its directors, officers, employees, agents, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress’s published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.
 <br />
-Cypress, the Cypress logo, and combinations thereof, WICED, ModusToolbox, PSoC, CapSense, EZ-USB, F-RAM, and Traveo are trademarks or registered trademarks of Cypress or a subsidiary of Cypress in the United States or in other countries. For a more complete list of Cypress trademarks, visit cypress.com. Other names and brands may be claimed as property of their respective owners.
+Cypress, the Cypress logo, and combinations thereof, WICED, ModusToolbox, PSoC, CapSense, EZ-USB, F-RAM, and Traveo are trademarks or registered trademarks of Cypress or a subsidiary of Cypress in the United States or in other countries. For a more complete list of Cypress trademarks, visit www.infineon.com. Other names and brands may be claimed as property of their respective owners.
